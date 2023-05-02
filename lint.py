@@ -19,6 +19,7 @@ SKIP_SECTIONS = [
 
 SKIP_KEYS = [
     lambda s: s == 'inherits',
+    lambda s: s == 'alias',
 ]
 
 def skip(s, matchers):
@@ -316,7 +317,9 @@ def update(notes, slicer, cfg, target):
 
 def output_diff(a, b, filename):
     diff = difflib.unified_diff(str(a).splitlines(), str(b).splitlines(), lineterm='', fromfile='a/' + filename, tofile='b/' + filename)
+    differs = False
     for line in diff:
+        differs = True
         if not sys.stdout.isatty():
             print(line)
         elif line.startswith('+'):
@@ -327,6 +330,7 @@ def output_diff(a, b, filename):
             print(colorama.Fore.BLUE + line + colorama.Fore.RESET)
         else:
             print(line)
+    return differs
 
 @click.command()
 @click.option('--write', '-w', is_flag=True, help='write changes to file')
@@ -351,9 +355,9 @@ def main(a, b=None, write=False):
         check_same(slicer, cfg, proposed)
 
     notes.print()
-    output_diff(cfg, proposed, a.name)
+    differs = output_diff(cfg, proposed, a.name)
 
-    if write:
+    if write and differs:
         a.close()
         with open(a.name, 'w') as f:
             proposed.write(f)
