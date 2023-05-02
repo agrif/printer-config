@@ -1,8 +1,9 @@
 # PrusaSlicer Profiles
 
 This repository contains [PrusaSlicer][] profiles for my 3D
-printers. It's unlikely to be very useful to anyone else, except
-perhaps as an example.
+printers. It also has a hacky tool to lint the INI files, removing
+entries that are redundant, as well as optionally updating the file
+with an exported config bundle.
 
  [PrusaSlicer]: https://github.com/prusa3d/PrusaSlicer
 
