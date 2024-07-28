@@ -77,6 +77,10 @@ def resolve(cfg, key):
         resolved = {}
 
     for k in subdata:
+        # FIXME this key will crash PrusaSlicer 1.8.0
+        # I don't know why. Just, don't use a wipe tower for now.
+        if k == 'wipe_tower_extruder':
+            continue
         resolved[k] = subdata[k].value
 
     return resolved
