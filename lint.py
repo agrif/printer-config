@@ -22,6 +22,14 @@ SKIP_KEYS = [
     lambda s: s == 'alias',
 ]
 
+# these keys crash PrusaSlicer
+SKIP_RESOLVE_KEYS = [
+    # 1.8.0
+    lambda s: s == 'wipe_tower_extruder',
+    # 2.9.2
+    lambda s: s == 'bed_temperature_extruder',
+]
+
 def skip(s, matchers):
     return any([f(s) for f in matchers])
 
@@ -77,9 +85,7 @@ def resolve(cfg, key):
         resolved = {}
 
     for k in subdata:
-        # FIXME this key will crash PrusaSlicer 1.8.0
-        # I don't know why. Just, don't use a wipe tower for now.
-        if k == 'wipe_tower_extruder':
+        if skip(k, SKIP_RESOLVE_KEYS):
             continue
         resolved[k] = subdata[k].value
 
